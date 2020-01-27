@@ -7,7 +7,7 @@ import time
 #print(type(gps))
 
 timeA = ["Hours", "Minutes", "Seconds"]
-gpsD = ["Latitude", "Longitude", "Altitude"]
+gpsD = ["Latitude", "Longitude", "Altitude", "Speed", "TAD", "HD"]
 gpsQ = ["Quality", "# of Satellites"]
 axis = ["X", "Y", "Z"]
 mplA = ["Pressure", "Altitude", "Temperature"]
