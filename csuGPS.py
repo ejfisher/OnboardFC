@@ -35,7 +35,7 @@ def acquire():
 	# as fast as data comes from the GPS unit (usually every second).
 	gps.update()
 	while not gps.has_fix:
-		if tryval = 2:
+		if tryval == 2:
 		 	return False, time, gpsData, gpsQuality
 			# Try again if we don't have a fix yet.
 		else:

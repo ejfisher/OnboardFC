@@ -2,7 +2,7 @@ import board
 import busio
 import adafruit_fxos8700
 import adafruit_fxas21002c
-import adafruit_mpl3115a2
+#import adafruit_mpl3115a2
 
 def init():
 	global i2c
@@ -13,8 +13,8 @@ def init():
 	i2c = busio.I2C(board.SCL, board.SDA)
 	fxos = adafruit_fxos8700.FXOS8700(i2c)
 	fxas = adafruit_fxas21002c.FXAS21002C(i2c)
-	mpl = adafruit_mpl3115a2.MPL3115A2(i2c)
-	mpl.sealevel_pressure = 102250
+	#mpl = adafruit_mpl3115a2.MPL3115A2(i2c)
+	#mpl.sealevel_pressure = 102250
 
 def acquire():
-	return fxos.accelerometer, fxos.magnetometer, fxas.gyroscope, (mpl.pressure, mpl.altitude, mpl.temperature)
+	return fxos.accelerometer, fxos.magnetometer, fxas.gyroscope, (0, 0, 0)

@@ -21,7 +21,7 @@ def write(filename, dArray):
 	f.close()
 
 
-def pad(dArray)
+def pad(dArray):
 	i = 0
 	padVals = [2, 7, 2, 5, 5, 6, 6]
 	decVals = ["0.0", "0.4", "0.0", "0.2", "0.2", "0.3", "0.0"]
