@@ -27,16 +27,25 @@ def init():
 def acquire():
 	global gps
 	global uart
+	tryval = 0
+	time = (0, 0, 0)
+	gpsData = (0, 0, 0, 0, 0, 0)
+	gpsQuality = (0, 0)
 	# Make sure to call gps.update() every loop iteration and at least twice
 	# as fast as data comes from the GPS unit (usually every second).
 	gps.update()
 	while not gps.has_fix:
-		# Try again if we don't have a fix yet.
-		gps.update()
+		if tryval = 2:
+		 	return False, time, gpsData, gpsQuality
+			# Try again if we don't have a fix yet.
+		else:
+			gps.update()
+			tryval += 1 
+	#Data tuple of GPS UTC Timelock (Hours, Minutes, Seconds)
 	time = (gps.timestamp_utc.tm_hour, gps.timestamp_utc.tm_min, gps.timestamp_utc.tm_sec)
 	#Data Tuple of (Latitude, Longitude, Altitude, Speed, TAD, HD)
 	gpsData = (gps.latitude, gps.longitude, gps.altitude_m, gps.speed_knots, gps.track_angle_deg, gps.horizontal_dilution)
 	#Data Tuple of (Fix Quality, # of satellites)
 	gpsQuality = (gps.fix_quality, gps.satellites)
 	
-	return time, gpsData, gpsQuality
+	return True, time, gpsData, gpsQuality

@@ -3,8 +3,6 @@ import csuI2C
 import csuDM
 import csuTX
 import time
-#gps = csuGPS.init()
-#print(type(gps))
 
 timeA = ["Hours", "Minutes", "Seconds"]
 gpsD = ["Latitude", "Longitude", "Altitude", "Speed", "TAD", "HD"]
@@ -14,6 +12,7 @@ mplA = ["Pressure", "Altitude", "Temperature"]
 headers = [timeA, gpsD, gpsQ, axis, axis, axis, mplA]
 dNames = ['Time.csv', 'gpsData.csv', 'gpsQuality.csv', 'acc.csv', 'mag.csv', 'gyro.csv', 'mpl.csv']
 
+initTime = time.monotonic()
 csuGPS.init()
 csuI2C.init()
 csuTX.init()
@@ -23,12 +22,13 @@ for i in range(7):
 # time = (utc-hr, utc-min, utc-sec)
 # gpsData = (Latitude, Longitude, Altitude, Speed, TAD, HD)
 # gpsQuality = (fix-quality, # of Sattelites)
-initTime = time.monotonic()
+lTime = time.monotonic()
+loopStart = lTime
 for i in range(30):
-	gpsTime, gpsData,gpsQuality = csuGPS.acquire()
+	gpsLock, gpsTime, gpsData,gpsQuality = csuGPS.acquire()
 	acc, mag, gyro, mpl  = csuI2C.acquire()
 	bigData = [gpsTime, gpsData, gpsQuality, acc, mag, gyro, mpl]
-
+	dString = csuDM.formatString(bigData)
 	#Take the aquired data and output to a file
 	for i in range(7):
 		csuDM.write(dNames[i], bigData[i])
@@ -51,10 +51,14 @@ for i in range(30):
 
 	#guarantees LORA packet is sent at LEAST 1 second apart. 
 	currentTime = time.monotonic()
-	if currentTime - initTime >= 1.0:
-		initTime = currentTime
+	if currentTime - lTime >= 1.0:
+		lTime = currentTime
 	else:
-		time.sleep = (currentTime - initTime)
-	csuTX.transmit(dString)
+		time.sleep = 1-(currentTime - lTime)
+	csuTX.transmit(csuDM.formatString(bigData))
 
+print('=' * 60)  # Print a separator line.
+print("Time to initialize: " + str(loopStart - initTime))
+print('Time to loop: ' + str(currentTime - loopStart))
+print('Total time Executing: ' + str(currentTime - initTime))
 print('=' * 60)  # Print a separator line.
